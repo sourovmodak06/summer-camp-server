@@ -31,6 +31,7 @@ dbConnect();
 // Database Collection
 const reviewCollection = client.db("SchoolofRock").collection("review");
 const classCollection = client.db("SchoolofRock").collection("classes");
+const instructorsCollection = client.db("SchoolofRock").collection("instructors");
 
 app.get("/", (req, res) => {
   res.send("School of Rock server is Running");
@@ -42,6 +43,10 @@ app.get("/review", async (req, res) => {
 });
 app.get("/classes", async (req, res) => {
   const result = await classCollection.find().toArray();
+  res.send(result);
+});
+app.get("/instructors", async (req, res) => {
+  const result = await instructorsCollection.find().toArray();
   res.send(result);
 });
 
