@@ -42,11 +42,11 @@ app.get("/review", async (req, res) => {
   res.send(result);
 });
 app.get("/classes", async (req, res) => {
-  const result = await classCollection.find().toArray();
+  const result = await classCollection.find().sort( { "enrolledStudent": -1 } ).toArray();
   res.send(result);
 });
 app.get("/instructors", async (req, res) => {
-  const result = await instructorsCollection.find().toArray();
+  const result = await instructorsCollection.find().sort( { "enrolledStudent": -1 } ).toArray();
   res.send(result);
 });
 
