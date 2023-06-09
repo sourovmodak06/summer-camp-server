@@ -46,6 +46,15 @@ app.get("/classes", async (req, res) => {
   const result = await classCollection.find().sort( { "enrolledStudent": -1 } ).toArray();
   res.send(result);
 });
+app.get("/classCart", async (req, res) => {
+  const email = req.query.email;
+  if (!email) {
+    res.send([]);
+  }
+  const query = {email: email};
+  const result = await classCartCollection.find(query).toArray();
+  res.send(result);
+})
 app.post("/classCart", async (req, res) => {
   const item = req.body;
   console.log(item);
