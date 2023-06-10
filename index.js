@@ -61,6 +61,12 @@ app.post("/classCart", async (req, res) => {
   const result = await classCartCollection.insertOne(item);
   res.send(result);
 })
+app.delete("/classCart/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = {_id: new ObjectId(id)};
+  const result = await classCartCollection.deleteOne(query);
+  res.send(result);
+})
 app.get("/instructors", async (req, res) => {
   const result = await instructorsCollection.find().sort( { "enrolledStudent": -1 } ).toArray();
   res.send(result);
