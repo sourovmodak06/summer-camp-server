@@ -33,10 +33,17 @@ const reviewCollection = client.db("SchoolofRock").collection("review");
 const classCollection = client.db("SchoolofRock").collection("classes");
 const classCartCollection = client.db("SchoolofRock").collection("classCart");
 const instructorsCollection = client.db("SchoolofRock").collection("instructors");
+const userCollection = client.db("SchoolofRock").collection("users");
 
 app.get("/", (req, res) => {
   res.send("School of Rock server is Running");
 });
+
+app.post("/users", async (req, res) => {
+  const user = req.body;
+  const result = await userCollection.insertOne(user);
+  res.send(result);
+})
 
 app.get("/review", async (req, res) => {
   const result = await reviewCollection.find().toArray();
