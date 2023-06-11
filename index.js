@@ -32,7 +32,9 @@ dbConnect();
 const reviewCollection = client.db("SchoolofRock").collection("review");
 const classCollection = client.db("SchoolofRock").collection("classes");
 const classCartCollection = client.db("SchoolofRock").collection("classCart");
-const instructorsCollection = client.db("SchoolofRock").collection("instructors");
+const instructorsCollection = client
+  .db("SchoolofRock")
+  .collection("instructors");
 const userCollection = client.db("SchoolofRock").collection("users");
 
 app.get("/", (req, res) => {
@@ -51,14 +53,28 @@ app.post("/users", async (req, res) => {
   }
   const result = await userCollection.insertOne(user);
   res.send(result);
-})
+});
+app.patch("/users/admin/:id", async (req, res) => {
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id) };
+  const updateDoc = {
+    $set: {
+      role: "admin",
+    },
+  };
+  const result = await userCollection.updateOne(filter, updateDoc);
+  res.send(result);
+});
 
 app.get("/review", async (req, res) => {
   const result = await reviewCollection.find().toArray();
   res.send(result);
 });
 app.get("/classes", async (req, res) => {
-  const result = await classCollection.find().sort( { "enrolledStudent": -1 } ).toArray();
+  const result = await classCollection
+    .find()
+    .sort({ enrolledStudent: -1 })
+    .toArray();
   res.send(result);
 });
 app.get("/classCart", async (req, res) => {
@@ -66,27 +82,29 @@ app.get("/classCart", async (req, res) => {
   if (!email) {
     res.send([]);
   }
-  const query = {email: email};
+  const query = { email: email };
   const result = await classCartCollection.find(query).toArray();
   res.send(result);
-})
+});
 app.post("/classCart", async (req, res) => {
   const item = req.body;
   console.log(item);
   const result = await classCartCollection.insertOne(item);
   res.send(result);
-})
+});
 app.delete("/classCart/:id", async (req, res) => {
   const id = req.params.id;
-  const query = {_id: new ObjectId(id)};
+  const query = { _id: new ObjectId(id) };
   const result = await classCartCollection.deleteOne(query);
   res.send(result);
-})
+});
 app.get("/instructors", async (req, res) => {
-  const result = await instructorsCollection.find().sort( { "enrolledStudent": -1 } ).toArray();
+  const result = await instructorsCollection
+    .find()
+    .sort({ enrolledStudent: -1 })
+    .toArray();
   res.send(result);
 });
-
 
 app.listen(port, () => {
   console.log(`Server PORT: ${port}`);
