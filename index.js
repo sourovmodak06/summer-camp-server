@@ -96,6 +96,12 @@ app.post("/users", async (req, res) => {
   const result = await userCollection.insertOne(user);
   res.send(result);
 });
+app.delete("/users/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await userCollection.deleteOne(query);
+  res.send(result);
+});
 app.get("/users/admin/:email", verifyJWT, async (req, res) => {
   const email = req.params.email;
   if (req.decoded.email !== email) {
