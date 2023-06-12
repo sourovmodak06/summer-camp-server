@@ -75,14 +75,12 @@ const verifyAdmin = async (req, res, next) => {
   const query = { email: email };
   const user = await userCollection.findOne(query);
   if (user?.role !== "admin") {
-    return res
-      .status(403)
-      .send({ error: true, message: "forbidden access" });
+    return res.status(403).send({ error: true, message: "forbidden access" });
   }
   next();
 };
 
-app.get("/users", verifyJWT,verifyAdmin, async (req, res) => {
+app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
   const result = await userCollection.find().toArray();
   res.send(result);
 });
@@ -156,6 +154,25 @@ app.get("/classes", async (req, res) => {
     .find()
     .sort({ enrolledStudent: -1 })
     .toArray();
+  res.send(result);
+});
+app.get("/myClasses/:email", async (req, res) => {
+  const email = req.params.email;
+  const query = { email };
+  const result = await classCollection
+    .find(query)
+    .toArray();
+  res.send(result);
+});
+app.delete("/myClasses/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await classCollection.deleteOne(query);
+  res.send(result);
+});
+app.post("/classes", verifyJWT, async (req, res) => {
+  const newItem = req.body;
+  const result = await classCollection.insertOne(newItem);
   res.send(result);
 });
 app.get("/classCart", verifyJWT, async (req, res) => {
